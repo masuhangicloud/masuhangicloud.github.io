@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="8gMIyYMe2vI-xUDNDzmRXMINbOkT8P1OMb1GnOPOyjM">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://www.masuhang.top').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+
+
+
+
+  <meta name="description" content="GIT版本控制系统版本控制系统（CVS）是以版本号的形式管理各类文件，能够详细的记录一个文件从创建到修改到删除等一些生命周期的各类操作，同时能够随心所欲的将文件回退到任何一个历史版本。 分布式相比于集中式的最大区别在于开发者可以提交到本地，每个开发者通过克隆（git clone），在本地机器上拷贝一个完整的Git仓库。Git是一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git-分布式版本控制系统">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;2019&#x2F;12&#x2F;24&#x2F;Git-%E5%88%86%E5%B8%83%E5%BC%8F%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F&#x2F;index.html">
+<meta property="og:site_name" content="Masuhang Blog">
+<meta property="og:description" content="GIT版本控制系统版本控制系统（CVS）是以版本号的形式管理各类文件，能够详细的记录一个文件从创建到修改到删除等一些生命周期的各类操作，同时能够随心所欲的将文件回退到任何一个历史版本。 分布式相比于集中式的最大区别在于开发者可以提交到本地，每个开发者通过克隆（git clone），在本地机器上拷贝一个完整的Git仓库。Git是一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-24T02:09:56.000Z">
+<meta property="article:modified_time" content="2019-12-24T02:32:01.359Z">
+<meta property="article:author" content="马苏杭">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://www.masuhang.top/2019/12/24/Git-%E5%88%86%E5%B8%83%E5%BC%8F%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Git-分布式版本控制系统 | Masuhang Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Masuhang Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.masuhang.top/2019/12/24/Git-%E5%88%86%E5%B8%83%E5%BC%8F%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="马苏杭">
+      <meta itemprop="description" content="Dance with code">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Masuhang Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Git-分布式版本控制系统
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-24 10:09:56 / 修改时间：10:32:01" itemprop="dateCreated datePublished" datetime="2019-12-24T10:09:56+08:00">2019-12-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/24/Git-%E5%88%86%E5%B8%83%E5%BC%8F%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/" class="post-meta-item leancloud_visitors" data-flag-title="Git-分布式版本控制系统" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/24/Git-%E5%88%86%E5%B8%83%E5%BC%8F%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/24/Git-%E5%88%86%E5%B8%83%E5%BC%8F%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="GIT版本控制系统"><a href="#GIT版本控制系统" class="headerlink" title="GIT版本控制系统"></a>GIT版本控制系统</h3><p>版本控制系统（CVS）是以版本号的形式管理各类文件，能够详细的记录一个文件从创建到修改到删除等一些生命周期的各类操作，同时能够随心所欲的将文件回退到任何一个历史版本。</p>
+<p>分布式相比于集中式的最大区别在于开发者可以提交到本地，每个开发者通过克隆（git clone），在本地机器上拷贝一个完整的Git仓库。Git是一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版本管理。Git 是 Linus Torvalds 为了帮助管理 Linux 内核开发而开发的一个开放源码的版本控制软件。<a id="more"></a></p>
+<h3 id="Git分支"><a href="#Git分支" class="headerlink" title="Git分支"></a>Git分支</h3><p>每次提交代码，Git都会生成支点，它们串成一条时间线，这条时间线就是一个分支。</p>
+<p>每次提交，<code>master</code>分支都会向前移动一步。随着你不断提交，<code>master</code>分支的线也越来越长。目前只有一条时间线，在Git里，这个分支叫主分支。</p>
+<p>创建新的分支，例如<code>dev</code>时，Git新建一个指针叫<code>dev</code>，指向<code>master</code>相同的提交，再把<code>HEAD</code>指向<code>dev</code>，就表示当前分支在<code>dev</code>上。</p>
+<p><strong><code>HEAD</code>指向的就是当前正在使用的分支</strong></p>
+<p>创建好dev分支开始，对工作区的修改和提交就是针对<code>dev</code>分支。比如新提交一次后，<code>dev</code>指针往前移动一步，而<code>master</code>指针不变。</p>
+<p>假如在<code>dev</code>上的工作完成了，就可以把<code>dev</code>合并到<code>master</code>上。最简单的方法，就是直接把<code>master</code>指向<code>dev</code>的当前提交，就完成了合并。</p>
+<p>合并分支完成后，如果<code>dev</code>分支不在使用，可以直接删除<code>dev</code>分支。删除<code>dev</code>分支就是把<code>dev</code>指针给删掉，就剩下了一条<code>master</code>分支。</p>
+<h3 id="Git常用指令"><a href="#Git常用指令" class="headerlink" title="Git常用指令"></a>Git常用指令</h3><h4 id="1-基础指令"><a href="#1-基础指令" class="headerlink" title="1.基础指令"></a>1.基础指令</h4><p>（1）git init ：想要新添加一个仓库，需要在仓库目录下执行该命令以将该项目初始化为git仓库，执行该命令会在根目录下生成对应的.git文件夹</p>
+<p>（2）git help <command> :查看某个命令（command）的帮助</p>
+<p>（3）添加文件到暂存区</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">git add -A //添加所有文件到暂存区</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">git add -u //添加更新文件到暂存区，包括更新和删除，不包括新增文件</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">git add . //添加新增和更新文件到暂存区，不包括删除文件</span></pre></td></tr></table></figure>
+
+<p>（4）git status：查看当前仓库状态</p>
+<p>（5）文件提交</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">git commit //将已经被add的文件提交到仓库</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">git commit -a //将已经被跟踪的文件一次性提交到仓库，而不用事先add相关文件</span></pre></td></tr></table></figure>
+<p>（6）归纳</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">git init //初始化本地git环境</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">git clone XXX//克隆一份代码到本地仓库</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">git pull //把远程库的代码更新到工作台</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">git pull --rebase origin master //强制把远程库的代码跟新到当前分支上面</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">git fetch //把远程库的代码更新到本地库</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">git add . //把本地的修改加到stage中</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">git commit -m 'comments here' //把stage中的修改提交到本地库</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">git push //把本地库的修改提交到远程库中</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">git branch -r/-a //查看远程分支/全部分支</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">git checkout master/branch //切换到某个分支</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">git checkout -b test //新建test分支</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">git checkout -d test //删除test分支</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">git merge master //假设当前在test分支上面，把master分支上的修改同步到test分支上</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">git merge tool //调用merge工具</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">git stash //把未完成的修改缓存到栈容器中</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">git stash list //查看所有的缓存</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">git stash pop //恢复本地分支到缓存状态</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">git blame someFile //查看某个文件的每一行的修改记录（）谁在什么时候修改的）</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">git status //查看当前分支有哪些修改</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">git log //查看当前分支上面的日志信息</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">git diff //查看当前没有add的内容</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">git diff --cache //查看已经add但是没有commit的内容</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">git diff HEAD //上面两个内容的合并</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD //撤销本地修改</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">echo $HOME //查看git config的HOME路径</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">export $HOME=/c/gitconfig //配置git config的HOME路径</span></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-远程仓库"><a href="#2-远程仓库" class="headerlink" title="2.远程仓库"></a>2.远程仓库</h4><p>（1）git remote show origin：显示本地仓库与远程仓库的关联信息</p>
+<p>（2）git remote add origin <URL>：将本地仓库与远程仓库（URL）建立关联</p>
+<p>（3）git remote remove origin：取消本地仓库与远程仓库的关联</p>
+<p>（4）git pull origin master –allow：从远程仓库获取代码并且允许pull远程仓库未关联的旧代码。这在对远程仓库添加了新文件而本地仓库还未关联该文件时很有必要</p>
+<p>（5）git clone <URL>：将远程仓库克隆到本地</p>
+<p>（6）git push origin master：将本地仓库代码同步到远程仓库的master分支（这是同步的一种简写方式，意思是将本地的master分支同步到远程的master分支）</p>
+<p>（7）git push origin test:master：将本地仓库中的test分支同步到远程仓库的master分支</p>
+<p>（8）git fetch origin：将远程服务器的数据同步到本地</p>
+<h4 id="3-本地分支"><a href="#3-本地分支" class="headerlink" title="3.本地分支"></a>3.本地分支</h4><p>（1）git branch：查看当前仓库分支列表，带有“*”的分支表示当前所在分支</p>
+<p>（2）git branch –v：查看当前仓库各分支及最后一次提交信息</p>
+<p>（3）git branch –merged：查看哪些分支已经合并到当前分支</p>
+<p>（4）git branch –no –merged：查看哪些分支还未合并到当前分支</p>
+<p>（5）git branch test：创建一个test分支</p>
+<p>（6）git checkout test：切换到test分支</p>
+<p>（7）git checkout -b test：创建并切换到test分支</p>
+<p>（8）git branch -d test：删除test分支</p>
+<p>（9）git merge test：将test分支合并到当前分支</p>
+<h4 id="4-远程分支"><a href="#4-远程分支" class="headerlink" title="4.远程分支"></a>4.远程分支</h4><p>（1）git checkout –track origin/test：将本地仓库切换到远程仓库的test分支</p>
+<p>（2）git push origin :test：删除远程仓库的test分支（要特别注意区分该指令与本地仓库同步到远程仓库的指令）</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/23/IntelliJ-IDEA%E5%BF%AB%E6%8D%B7%E9%94%AE/" rel="prev" title="IntelliJ IDEA快捷键">
+      <i class="fa fa-chevron-left"></i> IntelliJ IDEA快捷键
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GIT版本控制系统"><span class="nav-number">1.</span> <span class="nav-text">GIT版本控制系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git分支"><span class="nav-number">2.</span> <span class="nav-text">Git分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git常用指令"><span class="nav-number">3.</span> <span class="nav-text">Git常用指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-基础指令"><span class="nav-number">3.1.</span> <span class="nav-text">1.基础指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-远程仓库"><span class="nav-number">3.2.</span> <span class="nav-text">2.远程仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-本地分支"><span class="nav-number">3.3.</span> <span class="nav-text">3.本地分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-远程分支"><span class="nav-number">3.4.</span> <span class="nav-text">4.远程分支</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">马苏杭</p>
+  <div class="site-description" itemprop="description">Dance with code</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">马苏杭</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: 'wLve5coCvjGXel0kWL9ANgnk-gzGzoHsz',
+      appKey: 'U1VT837g3vwuSt2KaU6WWn40',
+      placeholder: "欢迎留言",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: true,
+      lang: 'zh-cn' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
