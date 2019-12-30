@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="8gMIyYMe2vI-xUDNDzmRXMINbOkT8P1OMb1GnOPOyjM">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://www.masuhang.top').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+
+
+
+
+  <meta name="description" content="一 主键和外键&lt;–转载–&gt; 关系型数据库中的一条记录中有若干个属性，若其中某一个属性组(注意是组)能唯一标识一条记录，该属性组就可以成为一个主键">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Primary Key And Foreign Key">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;2019&#x2F;12&#x2F;30&#x2F;Primary-Key-And-Foreign-Key&#x2F;index.html">
+<meta property="og:site_name" content="Masuhang Blog">
+<meta property="og:description" content="一 主键和外键&lt;–转载–&gt; 关系型数据库中的一条记录中有若干个属性，若其中某一个属性组(注意是组)能唯一标识一条记录，该属性组就可以成为一个主键">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-30T13:45:22.000Z">
+<meta property="article:modified_time" content="2019-12-30T14:06:38.607Z">
+<meta property="article:author" content="马苏杭">
+<meta property="article:tag" content="SQL">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://www.masuhang.top/2019/12/30/Primary-Key-And-Foreign-Key/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Primary Key And Foreign Key | Masuhang Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Masuhang Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">代码陪伴的日子</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.masuhang.top/2019/12/30/Primary-Key-And-Foreign-Key/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="马苏杭">
+      <meta itemprop="description" content="Dance with code">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Masuhang Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Primary Key And Foreign Key
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-30 21:45:22 / 修改时间：22:06:38" itemprop="dateCreated datePublished" datetime="2019-12-30T21:45:22+08:00">2019-12-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SQL/" itemprop="url" rel="index">
+                    <span itemprop="name">SQL</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/12/30/Primary-Key-And-Foreign-Key/" class="post-meta-item leancloud_visitors" data-flag-title="Primary Key And Foreign Key" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/30/Primary-Key-And-Foreign-Key/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/30/Primary-Key-And-Foreign-Key/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一-主键和外键"><a href="#一-主键和外键" class="headerlink" title="一 主键和外键"></a>一 主键和外键</h3><p>&lt;–转载–&gt;</p>
+<p>关系型数据库中的一条记录中有若干个属性，若其中某一个属性组(注意是组)能唯一标识一条记录，该属性组就可以成为一个主键 <a id="more"></a></p>
+<p>比如：  </p>
+<p>学生表(学号，姓名，性别，班级)<br>其中每个学生的学号是唯一的，学号就是一个主键<br>课程表(课程编号,课程名,学分)<br>其中课程编号是唯一的,课程编号就是一个主键<br>成绩表(学号,课程号,成绩)<br>成绩表中单一一个属性无法唯一标识一条记录，学号和课程号的组合才可以唯一标识一条记录，所以学号和课程号的属性组是一个主键 </p>
+<p>成绩表中的学号不是成绩表的主键，但它和学生表中的学号相对应，并且学生表中的学号是学生表的主键，则称成绩表中的学号是学生表的外键 </p>
+<p>同理 成绩表中的课程号是课程表的外键 </p>
+<p>定义主键和外键主要是为了维护关系数据库的完整性，总结一下：<br>1.主键是能确定一条记录的唯一标识，比如，一条记录包括身份正号，姓名，年龄。</p>
+<p>身份证号是唯一能确定你这个人的，其他都可能有重复，所以，身份证号是主键。 </p>
+<p>2.外键用于与另一张表的关联。是能确定另一张表记录的字段，用于保持数据的一致性。</p>
+<p>比如，A表中的一个字段，是B表的主键，那他就可以是A表的外键。</p>
+<h3 id="二-主键、外键和索引的区别"><a href="#二-主键、外键和索引的区别" class="headerlink" title="二 主键、外键和索引的区别"></a>二 主键、外键和索引的区别</h3><p><strong>主键：</strong></p>
+<p>定义：唯一标识一条记录，不能有重复的，不允许为空</p>
+<p>作用：用来保证数据完整性</p>
+<p>个数：主键只能有一个</p>
+<p><strong>外键：</strong></p>
+<p>定义：表的外键是另一表的主键, 外键可以有重复的, 可以是空值</p>
+<p>作用：用来和其他表建立联系用的</p>
+<p>个数： 一个表可以有多个外键</p>
+<p><strong>索引：</strong></p>
+<p>定义：该字段没有重复值，但可以有一个空值</p>
+<p>作用：是提高查询排序的速度</p>
+<p>个数：一个表可以有多个惟一索引</p>
+<p><strong>聚集索引和非聚集索引的区别：</strong></p>
+<p>聚集索引一定是唯一索引。但唯一索引不一定是聚集索引。 </p>
+<p>聚集索引，在索引页里直接存放数据，而非聚集索引在索引页里存放的是索引，这些索引指向专门的数据页的数据。</p>
+<h3 id="三-数据库中主键和外键的设计原则"><a href="#三-数据库中主键和外键的设计原则" class="headerlink" title="三 数据库中主键和外键的设计原则"></a>三 数据库中主键和外键的设计原则</h3><p>主键和外键是把多个表组织为一个有效的关系数据库的粘合剂。主键和外键的设计对物理数据库的性能和可用性都有着决定性的影响。</p>
+<p>必须将数据库模式从理论上的逻辑设计转换为实际的物理设计。而主键和外键的结构是这个设计过程的症结所在。一旦将所设计的数据库用于了生产环境，就很难对这些键进行修改，所以在开发阶段就设计好主键和外键就是非常必要和值得的。</p>
+<p>主键：</p>
+<p>  关系数据库依赖于主键—它是数据库物理模式的基石。</p>
+<p>  主键在物理层面上只有两个用途：</p>
+<pre><code>1. 惟一地标识一行。
+
+2. 作为一个可以被外键有效引用的对象。</code></pre><p>  基于以上这两个用途，设计物理层面的主键时所遵循的一些原则：</p>
+<pre><code> 1. 主键应当是对用户没有意义的。如果用户看到了一个表示多对多关系的连接表中的数据，并抱怨它没有什么用处，那就证明它的主键设计地很好。
+
+ 2. 主键应该是单列的，以便提高连接和筛选操作的效率。
+
+ 注：使用复合键的人通常有两个理由为自己开脱，而这两个理由都是错误的。其一是主键应当具有实际意义，然而，让主键具有意义只不过是给人为地破坏数据库提供了方便。其二是利用这种方法可以在描述多对多关系的连接表中使用两个外部键来作为主键，我也反对这种做法，理由是：复合主键常常导致不良的外键，即当连接表成为另一个从表的主表，而依据上面的第二种方法成为这个表主键的一部分，然，这个表又有可能再成为其它从表的主表，其主键又有可能成了其它从表主键的一部分，如此传递下去，越靠后的从表，其主键将会包含越多的列了。
+
+ 3. 永远也不要更新主键。实际上，因为主键除了惟一地标识一行之外，再没有其他的用途了，所以也就没有理由去对它更新。如果主键需要更新，则说明主键应对用户无意义的原则被违反了。
+
+注：这项原则对于那些经常需要在数据转换或多数据库合并时进行数据整理的数据并不适用。
+
+ 4. 主键不应包含动态变化的数据，如时间戳、创建时间列、修改时间列等。
+
+ 5. 主键应当有计算机自动生成。如果由人来对主键的创建进行干预，就会使它带有除了惟一标识一行以外的意义。一旦越过这个界限，就可能产生认为修改主键的动机，这样，这种系统用来链接记录行、管理记录行的关键手段就会落入不了解数据库设计的人的手中。</code></pre><h3 id="四-数据库主键选取策略"><a href="#四-数据库主键选取策略" class="headerlink" title="四 数据库主键选取策略"></a>四 数据库主键选取策略</h3><p>在建立数据库的时候，需要为每张表指定一个主键，所谓主键就是能够唯一标识表中某一行的属性或属性组，一个表只能有一个主键，但可以有多个候选索引。因为主键可以唯一标识某一行记录，所以可以确保执行数据更新、删除的时候不会出现张冠李戴的错误。当然，其它字段可以辅助我们在执行这些操作时消除共享冲突。主键除了上述作用外，常常与外键构成参照完整性约束，防止出现数据不一致。所以数据库在设计时，主键起到了很重要的作用。</p>
+<p>常见的数据库主键选取方式有：</p>
+<p>· 自动增长字段</p>
+<p>· 手动增长字段</p>
+<p>· UniqueIdentifier</p>
+<p>· “COMB（Combine）”类型</p>
+<p><strong>1 自动增长型字段</strong></p>
+<p>很多数据库设计者喜欢使用自动增长型字段，因为它使用简单。自动增长型字段允许我们在向数据库添加数据时，不考虑主键的取值，记录插入后，数据库系统会自动为其分配一个值，确保绝对不会出现重复。如果使用SQL Server数据库的话，我们还可以在记录插入后使用@@IDENTITY全局变量获取系统分配的主键键值。</p>
+<p>尽管自动增长型字段会省掉我们很多繁琐的工作，但使用它也存在潜在的问题，那就是在数据缓冲模式下，很难预先填写主键与外键的值。假设有两张表：</p>
+<p>Order(OrderID, OrderDate)<br>OrderDetial(OrderID, LineNum, ProductID, Price)</p>
+<p>Order表中的OrderID是自动增长型的字段。现在需要我们录入一张订单，包括在Order表中插入一条记录以及在OrderDetail表中插入若干条记录。因为Order表中的OrderID是自动增长型的字段，那么我们在记录正式插入到数据库之前无法事先得知它的取值，只有在更新后才能知道数据库为它分配的是什么值。这会造成以下矛盾发生：</p>
+<p>首先，为了能在OrderDetail的OrderID字段中添入正确的值，必须先更新Order表以获取到系统为其分配的OrderID值，然后再用这个OrderID填充OrderDetail表。最后更新OderDetail表。但是，为了确保数据的一致性，Order与OrderDetail在更新时必须在事务保护下同时进行，即确保两表同时更行成功。显然它们是相互矛盾的。</p>
+<p>除此之外，当我们需要在多个数据库间进行数据的复制时（SQL Server的数据分发、订阅机制允许我们进行库间的数据复制操作），自动增长型字段可能造成数据合并时的主键冲突。设想一个数据库中的Order表向另一个库中的Order表复制数据库时，OrderID到底该不该自动增长呢？</p>
+<p>ADO.NET允许我们在DataSet中将某一个字段设置为自动增长型字段，但千万记住，这个自动增长字段仅仅是个占位符而已，当数据库进行更新时，数据库生成的值会自动取代ADO.Net分配的值。所以为了防止用户产生误解，建议大家将ADO.NET中的自动增长初始值以及增量都设置成-1。此外，在ADO.NET中，我们可以为两张表建立DataRelation，这样存在级联关系的两张表更新时，一张表更新后另外一张表对应键的值也会自动发生变化，这会大大减少了我们对存在级联关系的两表间更新时自动增长型字段带来的麻烦。</p>
+<p><strong>2 手动增长型字段</strong></p>
+<p>既然自动增长型字段会带来如此的麻烦，不妨考虑使用手动增长型的字段，也就是说主键的值需要自己维护，通常情况下需要建立一张单独的表存储当前主键键值。还用上面的例子来说，这次我们新建一张表叫IntKey，包含两个字段，KeyName以及KeyValue。就像一个HashTable，给一个KeyName，就可以知道目前的KeyValue是什么，然后手工实现键值数据递增。在SQL Server中可以编写这样一个存储过程，让取键值的过程自动进行。代码如下：</p>
+<p>CREATE PROCEDURE [GetKey]</p>
+<p>@KeyName char(10),<br>@KeyValue int OUTPUT </p>
+<p>AS<br>UPDATE IntKey SET @KeyValue = KeyValue = KeyValue + 1 WHERE KeyName = @KeyName<br>Go</p>
+<p>这样，通过调用存储过程，我们可以获得最新键值，确保不会出现重复。若将OrderID字段设置为手动增长型字段，我们的程序可以由以下几步来实现：首先调用存储过程，获得一个OrderID，然后使用这个OrderID填充Order表与OrderDetail表，最后在事务保护下对两表进行更新。</p>
+<p>使用手动增长型字段作为主键在进行数据库间数据复制时，可以确保数据合并过程中不会出现键值冲突，只要我们为不同的数据库分配不同的主键取值段就行了。但是，使用手动增长型字段会增加网络的RoundTrip，我们必须通过增加一次数据库访问来获取当前主键键值，这会增加网络和数据库的负载，当处于一个低速或断开的网络环境中时，这种做法会有很大的弊端。同时，手工维护主键还要考虑并发冲突等种种因素，这更会增加系统的复杂程度。</p>
+<p><strong>3 使用UniqueIdentifier</strong></p>
+<p>SQL Server为我们提供了UniqueIdentifier数据类型，并提供了一个生成函数NEWID( )，使用NEWID( )可以生成一个唯一的UniqueIdentifier。UniqueIdentifier在数据库中占用16个字节，出现重复的概率非常小，以至于可以认为是0。我们经常从注册表中看到类似</p>
+<p>{45F0EB02-0727-4F2E-AAB5-E8AEDEE0CEC5}</p>
+<p>的东西实际上就是一个UniqueIdentifier，Windows用它来做COM组件以及接口的标识，防止出现重复。在.NET里管UniqueIdentifier称之为GUID（Global Unique Identifier）。在C#中可以使用如下命令生成一个GUID：</p>
+<p>Guid u = System.Guid.NewGuid();</p>
+<p>对于上面提到的Order与OrderDetail的程序，如果选用UniqueIdentifier作为主键的话，我们完全可以避免上面提到的增加网络RoundTrip的问题。通过程序直接生成GUID填充主键，不用考虑是否会出现重复。</p>
+<p>UniqueIdentifier字段也存在严重的缺陷：首先，它的长度是16字节，是整数的4倍长，会占用大量存储空间。更为严重的是，UniqueIdentifier的生成毫无规律可言，要想在上面建立索引（绝大多数数据库在主键上都有索引）是一个非常耗时的操作。有人做过实验，插入同样的数据量，使用UniqueIdentifier型数据做主键要比使用Integer型数据慢，所以，出于效率考虑，尽可能避免使用UniqueIdentifier型数据库作为主键键值。</p>
+<p><strong>4 使用“COMB（Combine）”类型</strong></p>
+<p>既然上面三种主键类型选取策略都存在各自的缺点，那么到底有没有好的办法加以解决呢？答案是肯定的。通过使用COMB类型（数据库中没有COMB类型，它是Jimmy Nilsson在他的“The Cost of GUIDs as Primary Keys”一文中设计出来的），可以在三者之间找到一个很好的平衡点。</p>
+<p>COMB数据类型的基本设计思路是这样的：既然UniqueIdentifier数据因毫无规律可言造成索引效率低下，影响了系统的性能，那么我们能不能通过组合的方式，保留UniqueIdentifier的前10个字节，用后6个字节表示GUID生成的时间（DateTime），这样我们将时间信息与UniqueIdentifier组合起来，在保留UniqueIdentifier的唯一性的同时增加了有序性，以此来提高索引效率。也许有人会担心UniqueIdentifier减少到10字节会造成数据出现重复，其实不用担心，后6字节的时间精度可以达到1/300秒，两个COMB类型数据完全相同的可能性是在这1/300秒内生成的两个GUID前10个字节完全相同，这几乎是不可能的！在SQL Server中用SQL命令将这一思路实现出来便是：</p>
+<p>DECLARE @aGuid UNIQUEIDENTIFIER</p>
+<p>SET @aGuid = CAST(CAST(NEWID() AS BINARY(10)) </p>
+<ul>
+<li>CAST(GETDATE() AS BINARY(6)) AS UNIQUEIDENTIFIER)</li>
+</ul>
+<p>经过测试，使用COMB做主键比使用INT做主键，在检索、插入、更新、删除等操作上仍然显慢，但比Unidentifier类型要快上一些。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SQL/" rel="tag"># SQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/24/Git-%E5%88%86%E5%B8%83%E5%BC%8F%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F/" rel="prev" title="Git-分布式版本控制系统">
+      <i class="fa fa-chevron-left"></i> Git-分布式版本控制系统
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-主键和外键"><span class="nav-number">1.</span> <span class="nav-text">一 主键和外键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-主键、外键和索引的区别"><span class="nav-number">2.</span> <span class="nav-text">二 主键、外键和索引的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-数据库中主键和外键的设计原则"><span class="nav-number">3.</span> <span class="nav-text">三 数据库中主键和外键的设计原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-数据库主键选取策略"><span class="nav-number">4.</span> <span class="nav-text">四 数据库主键选取策略</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">马苏杭</p>
+  <div class="site-description" itemprop="description">Dance with code</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">马苏杭</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: 'wLve5coCvjGXel0kWL9ANgnk-gzGzoHsz',
+      appKey: 'U1VT837g3vwuSt2KaU6WWn40',
+      placeholder: "欢迎留言",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: true,
+      lang: 'zh-cn' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
