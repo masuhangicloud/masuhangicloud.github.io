@@ -54,7 +54,7 @@
   <meta name="description" content="JDBC核心技术 第1章：JDBC概述1.1 数据的持久化 持久化(persistence)：把数据保存到可掉电式存储设备中以供之后使用。大多数情况下，特别是企业级应用，数据持久化意味着将内存中的数据保存到硬盘上加以”固化”，而持久化的实现过程大多通过各种关系数据库来完成。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JDBC核心技术">
-<meta property="og:url" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;2020&#x2F;03&#x2F;18&#x2F;JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF&#x2F;index.html">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;2020&#x2F;03&#x2F;22&#x2F;JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF&#x2F;index.html">
 <meta property="og:site_name" content="Masuhang Blog">
 <meta property="og:description" content="JDBC核心技术 第1章：JDBC概述1.1 数据的持久化 持久化(persistence)：把数据保存到可掉电式存储设备中以供之后使用。大多数情况下，特别是企业级应用，数据持久化意味着将内存中的数据保存到硬盘上加以”固化”，而持久化的实现过程大多通过各种关系数据库来完成。">
 <meta property="og:locale" content="zh_CN">
@@ -88,14 +88,14 @@
 <meta property="og:image" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;Users&#x2F;masuhang&#x2F;Movies&#x2F;Java_Vedio&#x2F;%E5%9F%BA%E7%A1%80%E9%98%B6%E6%AE%B5&#x2F;4%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF(2019%E6%96%B0%E7%89%88)&#x2F;1-%E8%AF%BE%E4%BB%B6&#x2F;%E8%AF%BE%E4%BB%B6-md&#x2F;%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC.assets&#x2F;1555593598606.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;Users&#x2F;masuhang&#x2F;Movies&#x2F;Java_Vedio&#x2F;%E5%9F%BA%E7%A1%80%E9%98%B6%E6%AE%B5&#x2F;4%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF(2019%E6%96%B0%E7%89%88)&#x2F;1-%E8%AF%BE%E4%BB%B6&#x2F;%E8%AF%BE%E4%BB%B6-md&#x2F;%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC.assets&#x2F;1555595163263.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;Users&#x2F;masuhang&#x2F;Movies&#x2F;Java_Vedio&#x2F;%E5%9F%BA%E7%A1%80%E9%98%B6%E6%AE%B5&#x2F;4%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF(2019%E6%96%B0%E7%89%88)&#x2F;1-%E8%AF%BE%E4%BB%B6&#x2F;%E8%AF%BE%E4%BB%B6-md&#x2F;%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC.assets&#x2F;1555595198644.png">
-<meta property="article:published_time" content="2020-03-18T12:58:13.000Z">
-<meta property="article:modified_time" content="2020-03-18T12:59:51.411Z">
+<meta property="article:published_time" content="2020-03-22T11:47:14.000Z">
+<meta property="article:modified_time" content="2020-03-22T11:58:46.083Z">
 <meta property="article:author" content="马苏杭">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;www.masuhang.top&#x2F;Users&#x2F;masuhang&#x2F;Movies&#x2F;Java_Vedio&#x2F;%E5%9F%BA%E7%A1%80%E9%98%B6%E6%AE%B5&#x2F;4%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF(2019%E6%96%B0%E7%89%88)&#x2F;1-%E8%AF%BE%E4%BB%B6&#x2F;%E8%AF%BE%E4%BB%B6-md&#x2F;%E5%B0%9A%E7%A1%85%E8%B0%B7_%E5%AE%8B%E7%BA%A2%E5%BA%B7_JDBC.assets&#x2F;1566741430592.png">
 
-<link rel="canonical" href="http://www.masuhang.top/2020/03/18/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/">
+<link rel="canonical" href="http://www.masuhang.top/2020/03/22/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/">
 
 
 <script id="page-configurations">
@@ -223,7 +223,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.masuhang.top/2020/03/18/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/">
+    <link itemprop="mainEntityOfPage" href="http://www.masuhang.top/2020/03/22/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -247,7 +247,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-03-18 20:58:13 / 修改时间：20:59:51" itemprop="dateCreated datePublished" datetime="2020-03-18T20:58:13+08:00">2020-03-18</time>
+              <time title="创建时间：2020-03-22 19:47:14 / 修改时间：19:58:46" itemprop="dateCreated datePublished" datetime="2020-03-22T19:47:14+08:00">2020-03-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -262,7 +262,7 @@
             </span>
 
           
-            <span id="/2020/03/18/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/" class="post-meta-item leancloud_visitors" data-flag-title="JDBC核心技术" title="阅读次数">
+            <span id="/2020/03/22/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/" class="post-meta-item leancloud_visitors" data-flag-title="JDBC核心技术" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -277,8 +277,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/03/18/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/18/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/03/22/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/22/JDBC%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1286,8 +1286,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/14/HashMap%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" rel="prev" title="HashMap底层实现原理">
-      <i class="fa fa-chevron-left"></i> HashMap底层实现原理
+    <a href="/2020/03/18/MySql/" rel="prev" title="MySql">
+      <i class="fa fa-chevron-left"></i> MySql
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -1364,7 +1364,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
